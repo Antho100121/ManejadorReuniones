@@ -1,0 +1,8 @@
+# DockerfileCentral for Central Server
+FROM openjdk:17
+WORKDIR /app
+COPY ./src/CentralServer.java .
+COPY ./employees.properties .
+RUN javac CentralServer.java
+EXPOSE 9090
+CMD ["java", "CentralServer"]
