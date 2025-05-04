@@ -12,7 +12,7 @@ COPY ../../central-server/src/modelo/*.java ./src/modelo/
 COPY ./src/aplicacion/*.java ./src/aplicacion/
 
 # Compilar el código fuente (modelo + aplicacion)
-RUN javac -d . src/modelo/*.java src/aplicacion/*.java
+RUN javac -d . src/modelo/.java src/aplicacion/.java
 
 # Exponer el puerto correspondiente a Alice_White (opcional si el cliente escucha)
 EXPOSE 8081
