@@ -1,17 +1,15 @@
 FROM openjdk:17
 
-# Crear directorio de trabajo
 WORKDIR /app
 
-# Copiar TODO el contenido de src respetando la estructura de carpetas
-COPY src/ src/
+# Copiar el código fuente y archivo de configuración
+COPY ./src ./src
 COPY employees.properties .
 
-# Compilar el código respetando los paquetes
+# Compilar clases y mantener la estructura de paquetes
 RUN javac -d . src/servidorcentral/*.java src/modelo/*.java
 
-# Exponer el puerto usado por el servidor
 EXPOSE 9090
 
-# Ejecutar especificando classpath relativo al WORKDIR
-CMD ["java", "-cp", ".", "servidorcentral.ServidorCentral"]
+# Ejecutar la clase principal (ahora el .class está en /app/servidorcentral)
+CMD ["java", "servidorcentral.ServidorCentral"]

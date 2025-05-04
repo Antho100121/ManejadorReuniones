@@ -1,12 +1,11 @@
 package aplicacion;
 
-import java.io.BufferedReader;
+import modelo.Reunion;
+
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-
-import modelo.Reunion;
 
 public class ServidorEmpleado {
     private int puerto;
@@ -19,21 +18,25 @@ public class ServidorEmpleado {
 
     public void escuchar() {
         try (ServerSocket serverSocket = new ServerSocket(puerto)) {
+            System.out.println("📡 ServidorEmpleado escuchando en el puerto " + puerto);
+
             while (true) {
                 try (Socket cliente = serverSocket.accept();
-                     BufferedReader in = new BufferedReader(new InputStreamReader(cliente.getInputStream()))) {
+                     ObjectInputStream ois = new ObjectInputStream(cliente.getInputStream())) {
 
-                    String linea = in.readLine();
-                    // Reunion r = Reunion.deserialize(linea);
-                    // manejador.modificarReunion(r);
+                    Reunion r = (Reunion) ois.readObject();
+                    System.out.println("Reunión recibida: " + r);
+                    manejador.agregarReunion(r);
 
                 } catch (Exception e) {
+                    System.err.println("Error al manejar una conexión:");
                     e.printStackTrace();
                 }
             }
+
         } catch (IOException e) {
+            System.err.println("Error al iniciar el servidor:");
             e.printStackTrace();
         }
     }
 }
-
