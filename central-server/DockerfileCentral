@@ -1,8 +1,14 @@
-# DockerfileCentral for Central Server
 FROM openjdk:17
+
 WORKDIR /app
-COPY ./src/CentralServer.java .
-COPY ./employees.properties .
-RUN javac CentralServer.java
+
+# Copiar todo el código fuente (modelo y servidorcentral)
+COPY ./src/ ./src/
+COPY employees.properties .
+
+# Compilar las clases
+RUN javac -d . src/servidorcentral/*.java src/modelo/*.java
+
 EXPOSE 9090
-CMD ["java", "CentralServer"]
+
+CMD ["java", "servidorcentral.ServidorCentral"]
