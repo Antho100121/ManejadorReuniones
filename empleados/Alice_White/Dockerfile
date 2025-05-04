@@ -1,20 +1,16 @@
-# Imagen base con JDK
 FROM openjdk:17
 
-# Directorio de trabajo dentro del contenedor
 WORKDIR /app
 
-# Copiar clases compartidas del modelo desde el central-server
-COPY ../../central-server/src/modelo/*.java ./src/modelo/
-
-# Copiar el código fuente del empleado (aplicación propia)
+# Copiamos los archivos del proyecto de Alicia
 COPY ./src/aplicacion/*.java ./src/aplicacion/
+COPY ./src/modelo/*.java ./src/modelo/
 
-# Compilar el código fuente (modelo + aplicacion)
-RUN javac -d . src/modelo/*.java src/aplicacion/*.java
+# Compilamos los .java dentro del contenedor
+RUN javac -d . src/aplicacion/*.java src/modelo/*.java
 
-# Exponer el puerto correspondiente a Alice_White
+# Exponemos el puerto de este empleado
 EXPOSE 8081
 
-# Comando por defecto para ejecutar el cliente
+# Comando de inicio
 CMD ["java", "aplicacion.ClienteEmpleado"]
