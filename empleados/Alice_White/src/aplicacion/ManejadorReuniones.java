@@ -1,62 +1,57 @@
 package aplicacion;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.File;
-import java.util.ArrayList;
-
 import modelo.Reunion;
 
-public class ManejadorReuniones {
-    //atributos
-    private ArrayList<Reunion> reuniones;
-    private File archivo;
+import java.io.*;
+import java.util.List;
+import java.util.ArrayList;
 
-    //constructor
-    ManejadorReuniones(File archivo){
-        this.archivo = new File("reunios_Alice.txt");
+public class ManejadorReuniones {
+
+    private List<Reunion> reuniones;
+    private final File archivo;
+
+    public ManejadorReuniones(File archivo) {
+        this.archivo = archivo;
         this.reuniones = new ArrayList<>();
         cargar();
     }
 
-    //metodos
-    public ArrayList<Reunion> getReuniones() {
+    public List<Reunion> getReuniones() {
         return reuniones;
     }
 
-    public void agregarReunion(Reunion r){
+    public void agregarReunion(Reunion r) {
         reuniones.add(r);
         guardar();
     }
 
-    public void modificarReunion(Reunion r){
-        //metodos de reunion
-        reuniones.add(r);
-        guardar();
-    }
-
-    public void guardar(){
-        try (PrintWriter out = new PrintWriter(archivo)) {
-            for (Reunion r : reuniones) {
-                // out.println(r.serialize());
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+    public void modificarReunion(int indice, Reunion r) {
+        if (indice >= 0 && indice < reuniones.size()) {
+            reuniones.set(indice, r);
+            guardar();
+        } else {
+            System.err.println("Índice fuera de rango: no se pudo modificar la reunión.");
         }
     }
 
-    public void cargar() {
+    private void guardar() {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(archivo))) {
+            oos.writeObject(reuniones);
+        } catch (IOException e) {
+            System.err.println("Error guardando archivo de reuniones: " + e.getMessage());
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void cargar() {
         reuniones.clear();
         if (!archivo.exists()) return;
-        try (BufferedReader reader = new BufferedReader(new FileReader(archivo))) {
-            String linea;
-            while ((linea = reader.readLine()) != null) {
-                // reuniones.add(Reunion.deserialize(linea));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(archivo))) {
+            reuniones = (List<Reunion>) ois.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            System.err.println("No se pudo cargar archivo de reuniones. Se usará una lista vacía.");
         }
     }
 }
