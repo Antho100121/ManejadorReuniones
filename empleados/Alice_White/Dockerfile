@@ -5,16 +5,15 @@ FROM openjdk:17
 WORKDIR /app
 
 # Copiar clases compartidas del modelo desde el central-server
-# Asegúrate de que la ruta relativa sea correcta
 COPY ../../central-server/src/modelo/*.java ./src/modelo/
 
 # Copiar el código fuente del empleado (aplicación propia)
 COPY ./src/aplicacion/*.java ./src/aplicacion/
 
 # Compilar el código fuente (modelo + aplicacion)
-RUN javac -d . src/modelo/.java src/aplicacion/.java
+RUN javac -d . src/modelo/*.java src/aplicacion/*.java
 
-# Exponer el puerto correspondiente a Alice_White (opcional si el cliente escucha)
+# Exponer el puerto correspondiente a Alice_White
 EXPOSE 8081
 
 # Comando por defecto para ejecutar el cliente
