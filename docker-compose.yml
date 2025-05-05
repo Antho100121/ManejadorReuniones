@@ -14,10 +14,12 @@ services:
       - "8081:8081"
 
 
-#  Bob_Smith:
- #   image: dfellig/deber-3:bob
-  #  ports:
-   #   - "8082:8082"
+  bob_smith:
+    build: 
+      context: ./empleados/Bob_Smith
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8082"
 
 #  Carol_Simpson:
 #    image: dfellig/deber-3:carol
