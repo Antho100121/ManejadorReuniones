@@ -4,17 +4,16 @@ FROM openjdk:17
 # Directorio de trabajo dentro del contenedor
 WORKDIR /app
 
-# Copiar clases compartidas del modelo desde el central-server
-COPY ../../central-server/src/modelo/*.java ./src/modelo/
-
-# Copiar el código fuente del empleado Eva_Brown
-COPY ./src/aplicacion/*.java ./src/aplicacion/
+# Copiamos los archivos del proyecto David
+COPY src/aplicacion/*.java ./src/aplicacion/
+COPY src/modelo/*.java     ./src/modelo/
 
 # Compilar el código fuente (modelo + aplicacion)
-RUN javac -d . src/modelo/*.java src/aplicacion/*.java
+RUN javac -d . src/aplicacion/*.java src/modelo/*.java
 
-# Exponer el puerto correspondiente a Eva_Brown
+
+# Exponer el puerto correspondiente a David_Black (opcional si el cliente escucha)
 EXPOSE 8085
 
-# Ejecutar el cliente del empleado
+# Comando por defecto para ejecutar el cliente
 CMD ["java", "aplicacion.ClienteEmpleado"]

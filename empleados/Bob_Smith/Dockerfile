@@ -6,7 +6,7 @@ WORKDIR /app
 
 # Copiamos los archivos del proyecto Bob
 COPY src/aplicacion/*.java ./src/aplicacion/
-COPY src/modelo/*.java     ./src/modelo/
+COPY src/modelo/*.java  ./src/modelo/
 
 # Compilar el código fuente (modelo + aplicacion)
 RUN javac -d . src/aplicacion/*.java src/modelo/*.java

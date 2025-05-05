@@ -3,8 +3,8 @@ FROM openjdk:17
 WORKDIR /app
 
 # Copiamos los archivos del proyecto de Alicia
-COPY ./src/aplicacion/*.java ./src/aplicacion/
-COPY ./src/modelo/*.java ./src/modelo/
+COPY src/aplicacion/*.java ./src/aplicacion/
+COPY src/modelo/*.java ./src/modelo/
 
 # Compilamos los .java dentro del contenedor
 RUN javac -d . src/aplicacion/*.java src/modelo/*.java

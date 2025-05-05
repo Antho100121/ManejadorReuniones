@@ -21,17 +21,23 @@ services:
     ports:
       - "8082:8082"
 
-#  Carol_Simpson:
-#    image: dfellig/deber-3:carol
-#    ports:
-#      - "8083:8083"
+  carol_simpson:
+    build: 
+      context: ./empleados/Carol_Simpson
+      dockerfile: Dockerfile
+    ports:
+      - "8083:8083"
 
-#  David_Black:
-#    image: dfellig/deber-3:david
-#    ports:
-#      - "8084:8084"
+  david_black:
+    build: 
+      context: ./empleados/David_Black
+      dockerfile: Dockerfile
+    ports:
+      - "8084:8084"
 
-#  Eva_Brown:
-#    image: dfellig/deber-3:eva
-#    ports:
-#      - "8085:8085"
+  eva_brown:
+    build: 
+      context: ./empleados/Eva_Brown
+      dockerfile: Dockerfile
+    ports:
+      - "8085:8085"
