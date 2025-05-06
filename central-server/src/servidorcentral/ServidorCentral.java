@@ -1,76 +1,66 @@
 package servidorcentral;
 
 import modelo.Reunion;
-import modelo.Empleado;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.List;
+
 
 public class ServidorCentral {
-
-    private static final int PUERTO = 9090;
-    private static Map<String, Empleado> empleados = new HashMap<>();
-
     public static void main(String[] args) {
-        // Usamos la ruta absoluta dentro del contenedor
-        cargarEmpleados("/app/employees.properties");
-        System.out.println("Servidor Central iniciado en puerto " + PUERTO);
+        int puerto = 9090;
 
-        try (ServerSocket serverSocket = new ServerSocket(PUERTO)) {
+        try (ServerSocket serverSocket = new ServerSocket(puerto)) {
+            System.out.println("🛰️ Servidor Central iniciado en puerto " + puerto);
+
             while (true) {
-                Socket socket = serverSocket.accept();
-                new Thread(() -> manejarConexion(socket)).start();
+                Socket cliente = serverSocket.accept();
+                new Thread(() -> manejarConexion(cliente)).start();
             }
-        } catch (IOException e) {
-            System.err.println("Error al iniciar el servidor central: " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("❌ Error en el servidor central:");
             e.printStackTrace();
         }
     }
 
-    private static void cargarEmpleados(String archivo) {
-        try (InputStream input = new FileInputStream(archivo)) {
-            Properties props = new Properties();
-            props.load(input);
+    private static void manejarConexion(Socket cliente) {
+        try (ObjectInputStream ois = new ObjectInputStream(cliente.getInputStream())) {
+            System.out.println("📥 Nueva conexión recibida...");
 
-            for (String nombre : props.stringPropertyNames()) {
-                String[] partes = props.getProperty(nombre).split(":");
-                int puerto = Integer.parseInt(partes[0]);
-                empleados.put(nombre, new Empleado(nombre, puerto));
-            }
-
-        } catch (IOException e) {
-            System.err.println("Error cargando archivo employees.properties");
-            e.printStackTrace();
-        }
-    }
-
-    private static void manejarConexion(Socket socket) {
-        try {
-            ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
             Reunion reunion = (Reunion) ois.readObject();
-            System.out.println("Reunión recibida: " + reunion);
+            System.out.println("✅ Reunión recibida: " + reunion);
 
-            reenviarReunion(reunion);
+            // Aquí puedes agregar lógica para almacenar o reenviar la reunión
 
-        } catch (IOException | ClassNotFoundException e) {
-            System.err.println("Error al manejar conexión: " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("❌ Error al manejar conexión:");
             e.printStackTrace();
+        } finally {
+            try {
+                cliente.close();
+            } catch (Exception ex) {
+                System.err.println("❗ Error al cerrar el socket del cliente.");
+            }
         }
     }
 
-    private static void reenviarReunion(Reunion reunion) {
-        Set<String> destinatarios = new HashSet<>(reunion.getInvitados());
-        destinatarios.add(reunion.getOrganizador());
+    public static void reenviarReunion(Reunion reunion, List<String> empleados, List<Integer> puertos) {
+        for (int i = 0; i < empleados.size(); i++) {
+            String host = empleados.get(i).toLowerCase(); // nombre del contenedor en Docker
+            int puerto = puertos.get(i);
 
-        for (String nombre : destinatarios) {
-            if (empleados.containsKey(nombre)) {
-                Empleado emp = empleados.get(nombre);
-                System.out.println("Notificando a " + nombre + " en puerto " + emp.getPuerto());
+            System.out.println("📤 Notificando a " + empleados.get(i) + " en puerto " + puerto);
+            try (Socket socket = new Socket(host, puerto);
+                 ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream())) {
 
-                ClienteCentral.enviar(emp.getPuerto(), reunion);
-            } else {
-                System.out.println("Empleado desconocido: " + nombre);
+                oos.writeObject(reunion);
+                System.out.println("✔ Reunión reenviada a " + empleados.get(i));
+
+            } catch (Exception e) {
+                System.err.println("❌ Error al enviar reunión al puerto " + puerto + ": " + e.getMessage());
             }
         }
     }

@@ -6,6 +6,7 @@ import java.util.List;
 //import java.util.Objects;
 
 public class Reunion implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String tema;
     private String organizador;
     private List<String> invitados;

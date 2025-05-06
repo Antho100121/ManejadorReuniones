@@ -1,0 +1,8 @@
+2
+Soporte Técnico
+Bob_Smith
+Carol_Simpson,David_Black
+Sala E
+2025-05-10T11:00
+2025-05-10T12:00
+4

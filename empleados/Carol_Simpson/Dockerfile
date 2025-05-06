@@ -1,19 +1,11 @@
-# Imagen base con JDK
 FROM openjdk:17
 
-# Directorio de trabajo dentro del contenedor
 WORKDIR /app
 
-# Copiamos los archivos del proyecto Carol
 COPY src/aplicacion/*.java ./src/aplicacion/
-COPY src/modelo/*.java     ./src/modelo/
+COPY src/modelo/*.java ./src/modelo/
+COPY input.txt .
 
-# Compilar el código fuente (modelo + aplicacion)
 RUN javac -d . src/aplicacion/*.java src/modelo/*.java
 
-
-# Exponer el puerto correspondiente a Carol_Simpson (opcional si el cliente escucha)
-EXPOSE 8083
-
-# Comando por defecto para ejecutar el cliente
-CMD ["java", "aplicacion.ClienteEmpleado"]
+CMD ["sh", "-c", "java aplicacion.ClienteEmpleado < input.txt"]

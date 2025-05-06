@@ -7,37 +7,26 @@ services:
       - "9090:9090"
 
   alice_white:
-    build:
-      context: ./empleados/Alice_White
-      dockerfile: Dockerfile
+    build: ./empleados/Alice_White
     ports:
       - "8081:8081"
 
-
   bob_smith:
-    build: 
-      context: ./empleados/Bob_Smith
-      dockerfile: Dockerfile
+    build: ./empleados/Bob_Smith
     ports:
       - "8082:8082"
 
   carol_simpson:
-    build: 
-      context: ./empleados/Carol_Simpson
-      dockerfile: Dockerfile
+    build: ./empleados/Carol_Simpson
     ports:
       - "8083:8083"
 
   david_black:
-    build: 
-      context: ./empleados/David_Black
-      dockerfile: Dockerfile
+    build: ./empleados/David_Black
     ports:
       - "8084:8084"
 
   eva_brown:
-    build: 
-      context: ./empleados/Eva_Brown
-      dockerfile: Dockerfile
+    build: ./empleados/Eva_Brown
     ports:
       - "8085:8085"
